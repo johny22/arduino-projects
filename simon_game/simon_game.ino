@@ -2,6 +2,8 @@ const int yellow = 2,
           green = 4,
           red = 7;
 
+const int choose_list[] = {yellow, green, red};
+
 const int HIT = 1, MISSED = 0;
 
 int sequence[100],
@@ -11,10 +13,9 @@ int sequence[100],
 int counter = 1;
 
 void blink(int color, int times=1, int on_time=800, int off_time=400) {
-  int valid[] = {red, yellow, green};
   int test = 0, i;
   for(i = 0; i < 3; i++){
-    if(color == valid[i])
+    if(color == choose_list[i])
       test = 1;
   }
   for(int i = 0; i<times; i++){
@@ -46,8 +47,7 @@ void wrong_answer(){
 }
 
 int play(int length) {
-  int pins[] = {4, 3, 2},
-      pins_state[] = {LOW, LOW, LOW},
+  int pins_state[] = {LOW, LOW, LOW},
       sequence2check[length],
       keypress_count = 0;
 
@@ -57,12 +57,12 @@ int play(int length) {
   while(keypress_count < length) {
     delay(100);
     for(int i = 0; i < 3; i++) {
-      pins_state[i] = digitalRead(pins[i]);
+      pins_state[i] = digitalRead(choose_list[i]);
       if(pins_state[i] == HIGH){
         while(pins_state[i] == HIGH){
-          pins_state[i] = digitalRead(pins[i]);
+          pins_state[i] = digitalRead(choose_list[i]);
         }
-        sequence2check[keypress_count] = pins[i];
+        sequence2check[keypress_count] = choose_list[i];
         keypress_count += 1;
         break;
       }
@@ -81,7 +81,8 @@ int play(int length) {
   return answer;
 }
 
-void setup() {           
+void setup() { 
+  Serial.begin(9600);
   pinMode(yellow, OUTPUT);     
   pinMode(red, OUTPUT);
   pinMode(green, OUTPUT);
@@ -97,7 +98,9 @@ void loop() {
   int index, answer;
   
   //Adds a random blink at the end
-  sequence[counter - 1] = random(2, 5);
+  int choice = random(3);
+  randomSeed(analogRead(0));
+  sequence[counter - 1] = choose_list[choice];
   
   for(index = 0; index < counter; index++)
     blink(sequence[index]);
