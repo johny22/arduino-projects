@@ -6,10 +6,7 @@ const int choose_list[] = {yellow, green, red};
 
 const int HIT = 1, MISSED = 0;
 
-int sequence[100],
-    correct[] = {yellow, green},
-    wrong[] = {yellow, red};
-
+int sequence[100];
 int counter = 1;
 
 void blink(int color, int times=1, int on_time=800, int off_time=400) {
@@ -97,9 +94,10 @@ void setup_read() {
 void loop() {
   int index, answer;
   
+  randomSeed(analogRead(0));
   //Adds a random blink at the end
   int choice = random(3);
-  randomSeed(analogRead(0));
+
   sequence[counter - 1] = choose_list[choice];
   
   for(index = 0; index < counter; index++)
